@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
 import './App.css'
+import { MiBoton } from './MiBoton.jsx'
+import { Tarjeta } from './Tarjeta.jsx'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+
+    <>  
+      
+      {/* Para mas de un elemento se usa un fragment.*/}
+      <h1 className="titulo">E-commerce App con Vite + React</h1>
+      <h2 className="subtitulo">Hola Mundo</h2>
+      <MiBoton text="Comprar" color="green"/>
+      <MiBoton text="Cancelar" color="red"/>
+    
     </>
   )
-}
+} export default App
 
-export default App
+function Subtitulo() {
+
+  return (
+
+    <>
+      <h2>Componente reactivo de manera nombrada</h2>
+    </>
+  )
+} export {Subtitulo}
+
+function Button() {
+
+  return (
+
+    <>
+      <button onClick={() => alert('Botón presionado!')}>Click</button>
+    </>
+  )
+} export {Button}
