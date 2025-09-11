@@ -2,7 +2,6 @@
 import './App.css'
 import { ListaEquipos } from './ListaEquipos.jsx';
 import { MiBoton } from './MiBoton.jsx'
-import { Tarjeta } from './Tarjeta.jsx'
 
 
 function App() {
@@ -32,8 +31,8 @@ function Subtitulo() {
   return (
 
     <>
-      <h2>Componente reactivo de manera nombrada</h2>
-      
+      <h2 className="subtitulo">Componente reactivo de manera nombrada</h2>
+
     </>
   )
 } export {Subtitulo}
@@ -43,7 +42,7 @@ function Button() {
   return (
 
     <>
-      <button onClick={() => alert('Botón presionado!')}>Click</button>
+      <button style={{ backgroundColor: 'blue', color: 'white' }} onClick={() => alert('Botón presionado!')}>Click</button>
     </>
   )
 } export {Button}

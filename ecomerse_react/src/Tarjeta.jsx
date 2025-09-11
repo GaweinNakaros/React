@@ -1,6 +1,6 @@
 
 
-function Tarjeta({text, descripcion,botonText}) {
+function Tarjeta({titulo, descripcion,botonText}) {
 
     return (
 
