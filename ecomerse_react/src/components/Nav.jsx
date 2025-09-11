@@ -1,4 +1,5 @@
 import React from "react";
+import { MiBoton } from "../MiBoton";
 
 function Nav() {
   return (

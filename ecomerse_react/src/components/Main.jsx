@@ -1,4 +1,5 @@
 import React from "react";
+import { EquipoTalentoLab } from "../components/EquipoTalentoLab.jsx";
 
 // Es el lugar donde se muestra el contenido principal de la página.
 // Aqui se colocara inforcaion central, como texto, imagenes, productos, u otros componentes.
@@ -9,6 +10,7 @@ function Main() {
     <main style= {{ padding: "20px" }}>
       <h2>Contenido Principal</h2>
       <p>Explora nuestros productos y disfruta de la mejor experiencia de compra.</p>
+      <EquipoTalentoLab />
     </main>
   );
 }
