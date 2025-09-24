@@ -1,0 +1,1 @@
+// Componente SelectTrigger eliminado. Usar Select.jsx nativo.

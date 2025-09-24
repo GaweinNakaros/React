@@ -1,0 +1,6 @@
+/* Estilos para el header de la tarjeta */
+.card-header {
+	padding: 18px 18px 0 18px;
+	background: none;
+}
+@import "./ui/CardHeader.css";

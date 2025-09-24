@@ -1,0 +1,5 @@
+/* Estilos para el botón reutilizable */
+.btn-primary, .btn-outline, .btn-icon {
+	font-family: inherit;
+}
+@import "./ui/Button.css";
