@@ -1,0 +1,35 @@
+/* Quita estas líneas si no usarás Tailwind */
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+body {
+  background: #f5f7ff;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.btn {
+  background: #5784fe;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn:hover {
+  background: #3b6efc;
+}
+
+/* Agrega más clases según lo que necesites */

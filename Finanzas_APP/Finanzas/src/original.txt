@@ -1,0 +1,557 @@
+"use client";
+
+import React, { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar, CreditCard, DollarSign, TrendingUp, TrendingDown, Plus, Edit, Trash2 } from "lucide-react";
+
+// Type definitions
+type TransactionType = 'income' | 'expense';
+type Transaction = {
+  id: string;
+  date: string;
+  amount: number;
+  description: string;
+  type: TransactionType;
+};
+
+type CreditCard = {
+  id: string;
+  name: string;
+  dueDate: number; // Day of month
+  closureDate: number; // Day of month
+  balance: number;
+};
+
+const FinancialTracker: React.FC = () => {
+  // State for transactions
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [newTransaction, setNewTransaction] = useState<Omit<Transaction, 'id'>>({
+    date: new Date().toISOString().split('T')[0],
+    amount: 0,
+    description: '',
+    type: 'income'
+  });
+  const [editingTransactionId, setEditingTransactionId] = useState<string | null>(null);
+
+  // State for credit cards
+  const [creditCards, setCreditCards] = useState<CreditCard[]>([]);
+  const [newCard, setNewCard] = useState<Omit<CreditCard, 'id'>>({
+    name: '',
+    dueDate: 15,
+    closureDate: 5,
+    balance: 0
+  });
+  const [editingCardId, setEditingCardId] = useState<string | null>(null);
+
+  // Dashboard stats
+  const [totalIncome, setTotalIncome] = useState(0);
+  const [totalExpenses, setTotalExpenses] = useState(0);
+  const [netBalance, setNetBalance] = useState(0);
+
+  // Initialize with sample data
+  useEffect(() => {
+    // Sample transactions
+    const sampleTransactions: Transaction[] = [
+      { id: '1', date: '2023-05-15', amount: 2500, description: 'Salary', type: 'income' },
+      { id: '2', date: '2023-05-16', amount: 45.99, description: 'Groceries', type: 'expense' },
+      { id: '3', date: '2023-05-18', amount: 1200, description: 'Freelance work', type: 'income' },
+      { id: '4', date: '2023-05-20', amount: 89.50, description: 'Dinner out', type: 'expense' },
+    ];
+    
+    // Sample credit cards
+    const sampleCards: CreditCard[] = [
+      { id: '1', name: 'Chase Sapphire', dueDate: 15, closureDate: 5, balance: 1250.75 },
+      { id: '2', name: 'Amex Gold', dueDate: 25, closureDate: 15, balance: 3200.00 },
+    ];
+    
+    setTransactions(sampleTransactions);
+    setCreditCards(sampleCards);
+  }, []);
+
+  // Calculate dashboard stats
+  useEffect(() => {
+    const income = transactions
+      .filter(t => t.type === 'income')
+      .reduce((sum, t) => sum + t.amount, 0);
+    
+    const expenses = transactions
+      .filter(t => t.type === 'expense')
+      .reduce((sum, t) => sum + t.amount, 0);
+    
+    setTotalIncome(income);
+    setTotalExpenses(expenses);
+    setNetBalance(income - expenses);
+  }, [transactions]);
+
+  // Transaction handlers
+  const handleTransactionSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (editingTransactionId) {
+      // Update existing transaction
+      setTransactions(transactions.map(t => 
+        t.id === editingTransactionId 
+          ? { ...newTransaction, id: editingTransactionId } as Transaction
+          : t
+      ));
+      setEditingTransactionId(null);
+    } else {
+      // Add new transaction
+      const transaction: Transaction = {
+        ...newTransaction,
+        id: Date.now().toString()
+      };
+      setTransactions([...transactions, transaction]);
+    }
+    
+    // Reset form
+    setNewTransaction({
+      date: new Date().toISOString().split('T')[0],
+      amount: 0,
+      description: '',
+      type: 'income'
+    });
+  };
+
+  const handleEditTransaction = (transaction: Transaction) => {
+    setNewTransaction({
+      date: transaction.date,
+      amount: transaction.amount,
+      description: transaction.description,
+      type: transaction.type
+    });
+    setEditingTransactionId(transaction.id);
+  };
+
+  const handleDeleteTransaction = (id: string) => {
+    setTransactions(transactions.filter(t => t.id !== id));
+  };
+
+  // Credit card handlers
+  const handleCardSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (editingCardId) {
+      // Update existing card
+      setCreditCards(creditCards.map(c => 
+        c.id === editingCardId 
+          ? { ...newCard, id: editingCardId } as CreditCard
+          : c
+      ));
+      setEditingCardId(null);
+    } else {
+      // Add new card
+      const card: CreditCard = {
+        ...newCard,
+        id: Date.now().toString()
+      };
+      setCreditCards([...creditCards, card]);
+    }
+    
+    // Reset form
+    setNewCard({
+      name: '',
+      dueDate: 15,
+      closureDate: 5,
+      balance: 0
+    });
+  };
+
+  const handleEditCard = (card: CreditCard) => {
+    setNewCard({
+      name: card.name,
+      dueDate: card.dueDate,
+      closureDate: card.closureDate,
+      balance: card.balance
+    });
+    setEditingCardId(card.id);
+  };
+
+  const handleDeleteCard = (id: string) => {
+    setCreditCards(creditCards.filter(c => c.id !== id));
+  };
+
+  // Format currency
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
+  };
+
+  // Get upcoming cards
+  const getUpcomingCards = () => {
+    const today = new Date().getDate();
+    return creditCards.filter(card => 
+      card.dueDate >= today || card.closureDate >= today
+    ).sort((a, b) => a.dueDate - b.dueDate);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-4 md:p-8">
+      <div className="mx-auto max-w-6xl">
+        {/* Header */}
+        <header className="mb-8 text-center">
+          <h1 className="text-3xl font-bold text-gray-800 md:text-4xl">Financial Tracker</h1>
+          <p className="text-gray-600">Track your income, expenses, and credit cards</p>
+        </header>
+
+        {/* Dashboard Summary */}
+        <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <Card className="border-l-4 border-l-green-500">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
+                <TrendingUp className="h-4 w-4" />
+                Total Income
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-green-600">{formatCurrency(totalIncome)}</p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-l-4 border-l-red-500">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
+                <TrendingDown className="h-4 w-4" />
+                Total Expenses
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-red-600">{formatCurrency(totalExpenses)}</p>
+            </CardContent>
+          </Card>
+
+          <Card className={netBalance >= 0 ? "border-l-4 border-l-blue-500" : "border-l-4 border-l-orange-500"}>
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
+                <DollarSign className="h-4 w-4" />
+                Net Balance
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className={`text-2xl font-bold ${netBalance >= 0 ? 'text-blue-600' : 'text-orange-600'}`}>
+                {formatCurrency(netBalance)}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+          {/* Left Column */}
+          <div className="space-y-8">
+            {/* Transaction Form */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Plus className="h-5 w-5" />
+                  {editingTransactionId ? 'Edit Transaction' : 'Add Transaction'}
+                </CardTitle>
+                <CardDescription>
+                  Record your income or expenses
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleTransactionSubmit} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="date">Date</Label>
+                      <div className="relative">
+                        <Calendar className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <Input
+                          id="date"
+                          type="date"
+                          value={newTransaction.date}
+                          onChange={(e) => setNewTransaction({...newTransaction, date: e.target.value})}
+                          className="pl-10"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="amount">Amount</Label>
+                      <Input
+                        id="amount"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={newTransaction.amount || ''}
+                        onChange={(e) => setNewTransaction({...newTransaction, amount: parseFloat(e.target.value) || 0})}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea
+                      id="description"
+                      value={newTransaction.description}
+                      onChange={(e) => setNewTransaction({...newTransaction, description: e.target.value})}
+                      placeholder="Salary, groceries, rent, etc."
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="type">Type</Label>
+                    <Select 
+                      value={newTransaction.type} 
+                      onValueChange={(value: TransactionType) => setNewTransaction({...newTransaction, type: value})}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="income">Income</SelectItem>
+                        <SelectItem value="expense">Expense</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <Button type="submit" className="w-full">
+                    {editingTransactionId ? 'Update Transaction' : 'Add Transaction'}
+                  </Button>
+                  
+                  {editingTransactionId && (
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={() => {
+                        setEditingTransactionId(null);
+                        setNewTransaction({
+                          date: new Date().toISOString().split('T')[0],
+                          amount: 0,
+                          description: '',
+                          type: 'income'
+                        });
+                      }}
+                    >
+                      Cancel Edit
+                    </Button>
+                  )}
+                </form>
+              </CardContent>
+            </Card>
+
+            {/* Credit Card Form */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard className="h-5 w-5" />
+                  {editingCardId ? 'Edit Credit Card' : 'Add Credit Card'}
+                </CardTitle>
+                <CardDescription>
+                  Manage your credit card details
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleCardSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="cardName">Card Name</Label>
+                    <Input
+                      id="cardName"
+                      value={newCard.name}
+                      onChange={(e) => setNewCard({...newCard, name: e.target.value})}
+                      placeholder="Chase Sapphire, Amex Gold, etc."
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="dueDate">Due Date (Day)</Label>
+                      <Input
+                        id="dueDate"
+                        type="number"
+                        min="1"
+                        max="31"
+                        value={newCard.dueDate}
+                        onChange={(e) => setNewCard({...newCard, dueDate: parseInt(e.target.value) || 1})}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="closureDate">Closure Date (Day)</Label>
+                      <Input
+                        id="closureDate"
+                        type="number"
+                        min="1"
+                        max="31"
+                        value={newCard.closureDate}
+                        onChange={(e) => setNewCard({...newCard, closureDate: parseInt(e.target.value) || 1})}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="balance">Current Balance</Label>
+                    <Input
+                      id="balance"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={newCard.balance || ''}
+                      onChange={(e) => setNewCard({...newCard, balance: parseFloat(e.target.value) || 0})}
+                      required
+                    />
+                  </div>
+
+                  <Button type="submit" className="w-full">
+                    {editingCardId ? 'Update Card' : 'Add Card'}
+                  </Button>
+                  
+                  {editingCardId && (
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={() => {
+                        setEditingCardId(null);
+                        setNewCard({
+                          name: '',
+                          dueDate: 15,
+                          closureDate: 5,
+                          balance: 0
+                        });
+                      }}
+                    >
+                      Cancel Edit
+                    </Button>
+                  )}
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-8">
+            {/* Upcoming Cards */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard className="h-5 w-5" />
+                  Upcoming Cards
+                </CardTitle>
+                <CardDescription>
+                  Important dates for your credit cards
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {getUpcomingCards().length > 0 ? (
+                  <div className="space-y-4">
+                    {getUpcomingCards().map(card => (
+                      <div key={card.id} className="flex items-center justify-between rounded-lg border p-4">
+                        <div>
+                          <h3 className="font-medium">{card.name}</h3>
+                          <p className="text-sm text-gray-500">
+                            Due: {card.dueDate}th | Closure: {card.closureDate}th
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-medium">{formatCurrency(card.balance)}</p>
+                          <div className="flex gap-1">
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              onClick={() => handleEditCard(card)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              onClick={() => handleDeleteCard(card.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-center text-gray-500">No upcoming cards</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Recent Transactions */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Transactions</CardTitle>
+                <CardDescription>
+                  Your latest income and expenses
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {transactions.length > 0 ? (
+                  <div className="space-y-4">
+                    {[...transactions]
+                      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                      .slice(0, 5)
+                      .map(transaction => (
+                        <div 
+                          key={transaction.id} 
+                          className={`flex items-center justify-between rounded-lg border p-4 ${
+                            transaction.type === 'income' 
+                              ? 'border-green-200 bg-green-50' 
+                              : 'border-red-200 bg-red-50'
+                          }`}
+                        >
+                          <div>
+                            <h3 className="font-medium">{transaction.description}</h3>
+                            <p className="text-sm text-gray-500">
+                              {new Date(transaction.date).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className={`font-medium ${
+                              transaction.type === 'income' 
+                                ? 'text-green-600' 
+                                : 'text-red-600'
+                            }`}>
+                              {transaction.type === 'income' ? '+' : '-'}
+                              {formatCurrency(transaction.amount)}
+                            </p>
+                            <div className="flex gap-1">
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                onClick={() => handleEditTransaction(transaction)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                onClick={() => handleDeleteTransaction(transaction.id)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    }
+                  </div>
+                ) : (
+                  <p className="text-center text-gray-500">No transactions yet</p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FinancialTracker;
