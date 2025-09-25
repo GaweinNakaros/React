@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './index.css' // Estilos globales locales (sin Tailwind)
-import FinancialTracker from './FinancialTracker'
+import './index.css' // <--- Importa Tailwind aquí
+import App from './App'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <FinancialTracker />
+    <App />
   </React.StrictMode>,
 )

@@ -1,109 +1,19 @@
-/* index.css - Estilos globales para Finanzas_APP/Finanzas/src */.input, textarea.input {
+/* Quita estas líneas si no usarás Tailwind */
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
 
-  border: 1px solid #d1d5db;
-
-.input, textarea.input {  border-radius: 6px;
-
-  border: 1px solid #d1d5db;  padding: 8px 12px;
-
-  border-radius: 6px;  width: 100%;
-
-  padding: 8px 12px;  font-size: 1rem;
-
-  width: 100%;  box-sizing: border-box;
-
-  font-size: 1rem;  margin-bottom: 8px;
-
-  box-sizing: border-box;  transition: border 0.2s;
-
-  margin-bottom: 8px;}
-
-  transition: border 0.2s;textarea.input {
-
-}  min-height: 60px;
-
-textarea.input {  resize: vertical;
-
-  min-height: 60px;}
-
-  resize: vertical;.input:focus, textarea.input:focus {
-
-}  border-color: #5784fe;
-
-.input:focus, textarea.input:focus {  outline: none;
-
-  border-color: #5784fe;}
-
-  outline: none;/* Inputs personalizados */
-
-}.input {
-
-.label {  border: 1px solid #d1d5db;
-
-  display: block;  border-radius: 6px;
-
-  font-weight: 500;  padding: 8px 12px;
-
-  margin-bottom: 4px;  width: 100%;
-
-  color: #222;  font-size: 1rem;
-
-}  box-sizing: border-box;
-
-body {  margin-bottom: 8px;
-
-  background: #f5f7ff;  transition: border 0.2s;
-
-  font-family: 'Segoe UI', Arial, sans-serif;}
-
-  margin: 0;.input:focus {
-
-  padding: 0;  border-color: #5784fe;
-
-}  outline: none;
-
-.card {}
-
-  background: #fff;
-
-  border-radius: 12px;.label {
-
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);  display: block;
-
-  padding: 24px;  font-weight: 500;
-
-  margin-bottom: 24px;  margin-bottom: 4px;
-
-}  color: #222;
-
-.btn {}
-
-  background: #5784fe;
-
-  color: #fff;
-
-  border: none;body {
-
-  border-radius: 6px;  background: #f5f7ff;
-
-  padding: 10px 20px;  font-family: 'Segoe UI', Arial, sans-serif;
-
-  font-weight: bold;  margin: 0;
-
-  cursor: pointer;  padding: 0;
-
-  transition: background 0.2s;}
-
+body {
+  background: #f5f7ff;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
-.btn:hover {.card {
-
-  background: #3b6efc;  background: #fff;
-
-}  border-radius: 12px;
-
-/* Agrega más clases según lo que necesites */  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   padding: 24px;
   margin-bottom: 24px;
 }

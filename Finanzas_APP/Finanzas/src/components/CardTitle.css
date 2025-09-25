@@ -1,9 +1,0 @@
-/* Estilos para el título de la tarjeta */
-.card-title {
-	font-size: 1.1rem;
-	font-weight: 600;
-	display: flex;
-	align-items: center;
-	gap: 8px;
-}
-@import "./ui/CardTitle.css";
