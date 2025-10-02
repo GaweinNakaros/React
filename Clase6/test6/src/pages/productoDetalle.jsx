@@ -1,25 +1,27 @@
+/**
+ * Componente DetalleProducto
+ * Muestra la información detallada de un producto específico
+ * Recibe los datos del producto a través del estado de la navegación
+ */
 import React from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
-
+import './productoDetalle.css';
 
 const DetalleProducto = () => {
+    // Obtener el ID del producto de los parámetros de la URL
     const { id } = useParams();
+    // Obtener el estado de la navegación que contiene los datos del producto
     const location = useLocation();
+    // Extraer el producto del estado, usando optional chaining para evitar errores
     const producto = location.state?.prod;
 
+    // Renderizado condicional si no se encuentra el producto
     if (!producto) {
         return (
-            <div style={{ textAlign: "center", padding: "20px" }}>
+            <div className="mensaje-error">
                 <h2>Producto no encontrado</h2>
                 <Link to="/productos">
-                    <button style={{
-                        padding: "10px 20px",
-                        backgroundColor: "#4299e1",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer"
-                    }}>
+                    <button className="btn-volver">
                         Volver a productos
                     </button>
                 </Link>
@@ -27,44 +29,30 @@ const DetalleProducto = () => {
         );
     }
 
+    // Renderizado principal del detalle del producto
     return (
-        <div style={{ 
-            maxWidth: "800px", 
-            margin: "20px auto", 
-            padding: "20px",
-            boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-            borderRadius: "8px"
-        }}>
-            <div style={{ display: "flex", gap: "20px", alignItems: "start" }}>
+        <div className="detalle-container">
+            <div className="detalle-content">
+                {/* Imagen del producto con manejo de errores */}
                 <img
                     src={producto.imagen ? encodeURI(producto.imagen) : 'https://placehold.co/400x300'}
                     alt={producto.nombre}
-                    style={{ 
-                        width: "400px",
-                        height: "300px",
-                        objectFit: "cover",
-                        borderRadius: "8px",
-                        backgroundColor: "#f5f5f5"
-                    }}
+                    className="detalle-imagen"
                     onError={(e) => {
                         e.target.src = 'https://placehold.co/400x300';
                     }}
                 />
-                <div>
-                    <h2 style={{ marginTop: 0 }}>{producto.nombre}</h2>
-                    <p style={{ fontSize: "1.1em", color: "#666" }}>{producto.descripcion}</p>
-                    <p style={{ fontSize: "1.5em", fontWeight: "bold", color: "#2c5282" }}>
-                        ${producto.precio}
+                {/* Información detallada del producto */}
+                <div className="detalle-info">
+                    <h2>{producto.nombre}</h2>
+                    <p className="detalle-descripcion">{producto.descripcion}</p>
+                    {/* Precio formateado con dos decimales */}
+                    <p className="detalle-precio">
+                        ${parseFloat(producto.precio || 0).toFixed(2)}
                     </p>
+                    {/* Botón para volver a la lista de productos */}
                     <Link to="/productos">
-                        <button style={{
-                            padding: "10px 20px",
-                            backgroundColor: "#4299e1",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: "pointer"
-                        }}>
+                        <button className="btn-volver">
                             Volver a productos
                         </button>
                     </Link>
