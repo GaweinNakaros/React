@@ -5,6 +5,7 @@ import  Nav  from './components/Nav.jsx';
 import  Main  from './components/Main.jsx';
 import  Gallery  from './components/Gallery.jsx';
 import  Footer  from './components/Footer.jsx';
+import  ProductCards from './components/ProductCards.jsx';
 import { ListaEquipos } from './ListaEquipos.jsx';
 import { MiBoton } from './MiBoton.jsx'
 
@@ -17,6 +18,7 @@ function App() {
       <Header />
       <Nav />
       <Main />
+      <ProductCards />
       <Gallery />
       <Footer />
     </div> 
