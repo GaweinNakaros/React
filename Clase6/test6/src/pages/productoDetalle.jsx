@@ -56,6 +56,8 @@ const DetalleProducto = () => {
                             Volver a productos
                         </button>
                     </Link>
+                    {/* Botón de compra */}
+                    <button className="btn-comprar">Comprar</button>
                 </div>
             </div>
         </div>

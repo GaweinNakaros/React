@@ -72,6 +72,21 @@
 
 }
 
+.btn-agregar {
+    width: 100%;
+    padding: 8px;
+    background-color: #3867d6; /* Azul primario */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.btn-agregar:hover {
+    background-color: #3867d6cc;
+}
+
 .btn-detalle:hover {
     background-color: #3867d6cc;
 }
