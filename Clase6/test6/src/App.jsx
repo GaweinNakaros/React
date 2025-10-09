@@ -9,6 +9,7 @@ import Servicios from './pages/servicios'
 import Productos from './pages/productos'
 import ProductoDetalle from './pages/productoDetalle'
 
+
 /**
  * Componente principal de la aplicación
  * Maneja el enrutamiento y la estructura general de la app
